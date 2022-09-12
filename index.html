@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>idk</title>
+		<style>
+			* {
+				font-family: 'Segoe UI Semibold';
+			}
+
+			html,
+			body {
+				margin: 0;
+			}
+
+			canvas {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<div
+			style="
+				position: absolute;
+				top: 0;
+				left: 0;
+				padding: 10px;
+				text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+			"
+		>
+			<div>
+				<h2>Shape</h2>
+				Circle <input type="radio" name="shape" id="circle" checked /><br />
+				Rectangle <input type="radio" name="shape" id="rectangle" /><br />
+				Rectangle (Rotate) <input type="radio" name="shape" id="rotatingRectangle" />
+			</div>
+			<div>
+				<h2>Type</h2>
+				<select id="type">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+			Source on <a href="https://github.com/OhBeomho/Something"></a>
+		</div>
+		<script src="./script.js"></script>
+	</body>
+</html>
