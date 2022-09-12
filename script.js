@@ -19,6 +19,7 @@ const pos = [];
 
 let mouseX = 0,
 	mouseY = 0;
+let clickEffect = 0;
 
 const shapeInput = [
 	document.getElementById('circle'),
@@ -41,6 +42,8 @@ for (let i = 0; i < shapeInput.length; i++) {
 
 typeSelect.addEventListener('change', () => (type = Number(typeSelect.value)));
 
+window.addEventListener('click', () => (clickEffect += 10));
+
 function savePos() {
 	for (let i = 0; i <= canvas.width / gap + 5; i++) {
 		for (let j = 0; j <= canvas.height / gap + 5; j++) {
@@ -54,22 +57,23 @@ function savePos() {
 
 function calculateSize(x, y, type) {
 	let result;
+	let v = 15 + clickEffect;
 
 	switch (type) {
 		case 1:
-			result = Math.abs(x - mouseX) / 20 + Math.abs(y - mouseY) / 20;
+			result = Math.abs(x - mouseX) / v + Math.abs(y - mouseY) / v;
 			break;
 		case 2:
-			result = Math.abs(x - mouseX) / 20 - Math.abs(y - mouseY) / 20;
+			result = Math.abs(x - mouseX) / v - Math.abs(y - mouseY) / v;
 			break;
 		case 3:
-			result = Math.abs(y - mouseY) / 20 - Math.abs(x - mouseX) / 20;
+			result = Math.abs(y - mouseY) / v - Math.abs(x - mouseX) / v;
 			break;
 		case 4:
-			result = Math.abs(Math.abs(x - mouseX) / 20 - Math.abs(y - mouseY) / 20);
+			result = Math.abs(Math.abs(x - mouseX) / v - Math.abs(y - mouseY) / v);
 			break;
 		case 5:
-			result = Math.sin(Math.abs(Math.abs(x - mouseX) / 20 - Math.abs(y - mouseY) / 20) / 2) * 70;
+			result = Math.sin(Math.abs(Math.abs(x - mouseX) / v - Math.abs(y - mouseY) / v) / 2) * 70;
 			break;
 	}
 
@@ -116,7 +120,12 @@ function drawRotatingRectangles(type) {
 
 function animate() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	shape(type);
+
+	if (clickEffect > 0) clickEffect -= clickEffect / 10;
+	else if (clickEffect < 0) clickEffect = 0;
+
 	requestAnimationFrame(animate);
 }
 
