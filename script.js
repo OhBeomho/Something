@@ -61,19 +61,19 @@ function calculateSize(x, y, type) {
 
 	switch (type) {
 		case 1:
-			result = Math.abs(x - mouseX) / v + Math.abs(y - mouseY) / v;
+			result = (Math.abs(x - mouseX) + Math.abs(y - mouseY)) / v;
 			break;
 		case 2:
-			result = Math.abs(x - mouseX) / v - Math.abs(y - mouseY) / v;
+			result = (Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v;
 			break;
 		case 3:
-			result = Math.abs(y - mouseY) / v - Math.abs(x - mouseX) / v;
+			result = (Math.abs(y - mouseY) - Math.abs(x - mouseX)) / v;
 			break;
 		case 4:
-			result = Math.abs(Math.abs(x - mouseX) / v - Math.abs(y - mouseY) / v);
+			result = Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v);
 			break;
 		case 5:
-			result = Math.sin(Math.abs(Math.abs(x - mouseX) / v - Math.abs(y - mouseY) / v) / 2) * 70;
+			result = Math.sin(Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v) / 2) * 70;
 			break;
 	}
 
