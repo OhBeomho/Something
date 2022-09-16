@@ -16,6 +16,7 @@ const ctx = canvas.getContext('2d');
 
 const gap = 50;
 const pos = [];
+const types = 6;
 
 let mouseX = 0,
 	mouseY = 0;
@@ -28,6 +29,13 @@ const shapeInput = [
 ];
 const shapeFuncs = [drawCircles, drawRectangles, drawRotatingRectangles];
 const typeSelect = document.getElementById('type');
+
+for (let i = 0; i < types; i++) {
+	const option = document.createElement('option');
+	option.innerText = i + 1;
+	option.value = i + 1;
+	typeSelect.appendChild(option);
+}
 
 let type = Number(typeSelect.value);
 let shape = drawCircles;
@@ -64,15 +72,18 @@ function calculateSize(x, y, type) {
 			result = (Math.abs(x - mouseX) + Math.abs(y - mouseY)) / v;
 			break;
 		case 2:
-			result = (Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v;
+			result = ((gap * gap) / 2 - (Math.abs(x - mouseX) + Math.abs(y - mouseY))) / v;
 			break;
 		case 3:
-			result = (Math.abs(y - mouseY) - Math.abs(x - mouseX)) / v;
+			result = (Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v;
 			break;
 		case 4:
-			result = Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v);
+			result = (Math.abs(y - mouseY) - Math.abs(x - mouseX)) / v;
 			break;
 		case 5:
+			result = Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v);
+			break;
+		case 6:
 			result = Math.sin(Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v) / 2) * 70;
 			break;
 	}
