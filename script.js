@@ -42,25 +42,16 @@ let shape = drawCircles;
 
 for (let i = 0; i < shapeInput.length; i++) {
 	if (shapeInput[i].checked) shape = shapeFuncs[i];
-
 	shapeInput[i].addEventListener('change', () => {
 		if (shapeInput[i].checked) shape = shapeFuncs[i];
 	});
 }
 
 typeSelect.addEventListener('change', () => (type = Number(typeSelect.value)));
-
 window.addEventListener('click', () => (clickEffect += 10));
 
-function savePos() {
-	for (let i = 0; i <= canvas.width / gap + 5; i++) {
-		for (let j = 0; j <= canvas.height / gap + 5; j++) {
-			pos.push({
-				x: i * gap,
-				y: j * gap
-			});
-		}
-	}
+for (let i = 0; i <= canvas.width / gap + 5; i++) {
+	for (let j = 0; j <= canvas.height / gap + 5; j++) pos.push({ x: i * gap, y: j * gap });
 }
 
 function calculateSize(x, y, type) {
@@ -96,7 +87,6 @@ function drawCircles(type) {
 
 	for (let p of pos) {
 		let size = calculateSize(p.x, p.y, type);
-
 		ctx.beginPath();
 		ctx.arc(p.x, p.y, size / 2, 0, 2 * Math.PI);
 		ctx.fill();
@@ -108,7 +98,6 @@ function drawRectangles(type) {
 
 	for (let p of pos) {
 		let size = calculateSize(p.x, p.y, type);
-
 		ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
 	}
 }
@@ -118,9 +107,6 @@ function drawRotatingRectangles(type) {
 
 	for (let p of pos) {
 		let size = calculateSize(p.x, p.y, type);
-
-		if (size <= 0) continue;
-
 		ctx.save();
 		ctx.translate(p.x - size / 2, p.y - size / 2);
 		ctx.rotate((size * 10 * Math.PI) / 180);
@@ -131,7 +117,6 @@ function drawRotatingRectangles(type) {
 
 function animate() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 	shape(type);
 
 	if (clickEffect > 0) clickEffect -= clickEffect / 10;
@@ -140,5 +125,4 @@ function animate() {
 	requestAnimationFrame(animate);
 }
 
-savePos();
-requestAnimationFrame(animate);
+animate();
