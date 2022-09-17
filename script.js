@@ -13,6 +13,7 @@ window.addEventListener('mousemove', (e) => {
 });
 
 const ctx = canvas.getContext('2d');
+ctx.fillStyle = 'black';
 
 const gap = 50;
 const pos = [];
@@ -30,15 +31,15 @@ const shapeInput = [
 const shapeFuncs = [drawCircles, drawRectangles, drawRotatingRectangles];
 const typeSelect = document.getElementById('type');
 
-for (let i = 0; i < types; i++) {
+for (let i = 1; i <= types; i++) {
 	const option = document.createElement('option');
-	option.innerText = i + 1;
-	option.value = i + 1;
+	option.innerText = i;
+	option.value = i;
 	typeSelect.appendChild(option);
 }
 
 let type = Number(typeSelect.value);
-let shape = drawCircles;
+let shape;
 
 for (let i = 0; i < shapeInput.length; i++) {
 	if (shapeInput[i].checked) shape = shapeFuncs[i];
@@ -83,8 +84,6 @@ function calculateSize(x, y, type) {
 }
 
 function drawCircles(type) {
-	ctx.fillStyle = 'black';
-
 	for (let p of pos) {
 		let size = calculateSize(p.x, p.y, type);
 		ctx.beginPath();
@@ -94,8 +93,6 @@ function drawCircles(type) {
 }
 
 function drawRectangles(type) {
-	ctx.fillStyle = 'black';
-
 	for (let p of pos) {
 		let size = calculateSize(p.x, p.y, type);
 		ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
@@ -103,8 +100,6 @@ function drawRectangles(type) {
 }
 
 function drawRotatingRectangles(type) {
-	ctx.fillStyle = 'black';
-
 	for (let p of pos) {
 		let size = calculateSize(p.x, p.y, type);
 		ctx.save();
@@ -117,6 +112,7 @@ function drawRotatingRectangles(type) {
 
 function animate() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	shape(type);
 
 	if (clickEffect > 0) clickEffect -= clickEffect / 10;
