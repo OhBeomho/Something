@@ -5,11 +5,12 @@ canvas.height = window.innerHeight
 window.addEventListener('resize', () => {
 	canvas.width = window.innerWidth
 	canvas.height = window.innerHeight
-	savePos()
+	setPos()
+	console.log(pos.length)
 })
 window.addEventListener('mousemove', (e) => {
-	mouseX = e.pageX
-	mouseY = e.pageY
+	mouse_x = e.pageX
+	mouse_y = e.pageY
 })
 
 const ctx = canvas.getContext('2d')
@@ -19,73 +20,62 @@ const gap = 50
 const pos = []
 const types = 6
 
-let mouseX = 0,
-	mouseY = 0
-let clickEffect = 0
+let mouse_x = 0,
+	mouse_y = 0
+let click_effect_power = 0
 
-const shapeInput = [
+const shape_inputs = [
 	document.getElementById('circle'),
 	document.getElementById('rectangle'),
 	document.getElementById('rotatingRectangle')
 ]
-const shapeFuncs = [drawCircles, drawRectangles, drawRotatingRectangles]
-const typeSelect = document.getElementById('type')
+const shape_funcs = [drawCircles, drawRectangles, drawRotatingRectangles]
+const type_select = document.getElementById('type')
 
 for (let i = 1; i <= types; i++) {
 	const option = document.createElement('option')
-	option.innerText = i
-	option.value = i
-	typeSelect.appendChild(option)
+	option.innerText = option.value = i
+	type_select.appendChild(option)
 }
 
-let type = Number(typeSelect.value)
-let shape
+let type = Number(type_select.value)
+let shape = shape_funcs[0]
 
-for (let i = 0; i < shapeInput.length; i++) {
-	if (shapeInput[i].checked) shape = shapeFuncs[i]
-	shapeInput[i].addEventListener('change', () => {
-		if (shapeInput[i].checked) shape = shapeFuncs[i]
+for (let i = 0; i < shape_inputs.length; i++) {
+	shape_inputs[i].addEventListener('change', () => {
+		if (shape_inputs[i].checked) shape = shape_funcs[i]
 	})
 }
 
-typeSelect.addEventListener('change', () => (type = Number(typeSelect.value)))
-window.addEventListener('click', () => (clickEffect += 10))
+type_select.addEventListener('change', () => (type = Number(type_select.value)))
+window.addEventListener('click', () => (click_effect_power += 10))
 
-for (let i = 0; i <= canvas.width / gap + 5; i++) {
-	for (let j = 0; j <= canvas.height / gap + 5; j++) pos.push({ x: i * gap, y: j * gap })
+function setPos() {
+	pos.splice(0, pos.length)
+
+	for (let i = 0; i <= canvas.width / gap + 1; i++) {
+		for (let j = 0; j <= canvas.height / gap + 1; j++) pos.push({ x: i * gap, y: j * gap })
+	}
 }
 
-function calculateSize(x, y, type) {
-	let result
-	let v = 15 + clickEffect
-
-	switch (type) {
-		case 1:
-			result = (Math.abs(x - mouseX) + Math.abs(y - mouseY)) / v
-			break
-		case 2:
-			result = ((gap * gap) / 2 - (Math.abs(x - mouseX) + Math.abs(y - mouseY))) / v
-			break
-		case 3:
-			result = (Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v
-			break
-		case 4:
-			result = (Math.abs(y - mouseY) - Math.abs(x - mouseX)) / v
-			break
-		case 5:
-			result = Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v)
-			break
-		case 6:
-			result = Math.sin(Math.abs((Math.abs(x - mouseX) - Math.abs(y - mouseY)) / v) / 2) * 70
-			break
-	}
+function calculateSize(x, y) {
+	const v = 15 + click_effect_power
+	const results = [
+		(Math.abs(x - mouse_x) + Math.abs(y - mouse_y)) / v,
+		((gap * gap) / 2 - (Math.abs(x - mouse_x) + Math.abs(y - mouse_y))) / v,
+		(Math.abs(x - mouse_x) - Math.abs(y - mouse_y)) / v,
+		(Math.abs(y - mouse_y) - Math.abs(x - mouse_x)) / v,
+		Math.abs((Math.abs(x - mouse_x) - Math.abs(y - mouse_y)) / v),
+		Math.sin(Math.abs((Math.abs(x - mouse_x) - Math.abs(y - mouse_y)) / v) / 2) * 70
+	]
+	const result = results[type - 1]
 
 	return result <= 0 ? 0 : result
 }
 
 function drawCircles(type) {
 	for (let p of pos) {
-		let size = calculateSize(p.x, p.y, type)
+		let size = calculateSize(p.x, p.y)
 		ctx.beginPath()
 		ctx.arc(p.x, p.y, size / 2, 0, 2 * Math.PI)
 		ctx.fill()
@@ -94,14 +84,14 @@ function drawCircles(type) {
 
 function drawRectangles(type) {
 	for (let p of pos) {
-		let size = calculateSize(p.x, p.y, type)
+		let size = calculateSize(p.x, p.y)
 		ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size)
 	}
 }
 
 function drawRotatingRectangles(type) {
 	for (let p of pos) {
-		let size = calculateSize(p.x, p.y, type)
+		let size = calculateSize(p.x, p.y)
 		ctx.save()
 		ctx.translate(p.x - size / 2, p.y - size / 2)
 		ctx.rotate((size * 10 * Math.PI) / 180)
@@ -115,10 +105,11 @@ function animate() {
 
 	shape(type)
 
-	if (clickEffect > 0) clickEffect -= clickEffect / 10
-	else if (clickEffect < 0) clickEffect = 0
+	if (click_effect_power > 0) click_effect_power -= click_effect_power / 10
+	else if (click_effect_power < 0) click_effect_power = 0
 
 	requestAnimationFrame(animate)
 }
 
+setPos()
 animate()
